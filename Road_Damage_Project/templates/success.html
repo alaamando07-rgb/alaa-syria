@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تم إرسال البلاغ بنجاح</title>
+    <style>
+        :root {
+            --bg-dark: #0a1f1d;
+            --card-bg: #132e2a;
+            --primary-gold: #c5a059;
+            --text-light: #e2e8f0;
+            --border-color: #2a524b;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .success-card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border-color);
+            width: 100%;
+            max-width: 500px;
+            padding: 40px;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        .icon-circle {
+            width: 80px;
+            height: 80px;
+            background-color: rgba(197, 160, 89, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px auto;
+            border: 2px solid var(--primary-gold);
+        }
+
+        .icon-circle span {
+            font-size: 40px;
+            color: var(--primary-gold);
+        }
+
+        h1 {
+            color: var(--primary-gold);
+            font-size: 24px;
+            margin: 0 0 15px 0;
+        }
+
+        p {
+            color: #a0aec0;
+            font-size: 15px;
+            line-height: 1.6;
+            margin: 0 0 30px 0;
+        }
+
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-gold);
+            color: #1a1a1a;
+            border: 1px solid var(--primary-gold);
+        }
+
+        .btn-primary:hover {
+            background-color: #dcb365;
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--text-light);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--border-color);
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="success-card">
+        <div class="icon-circle">
+            <span>✓</span>
+        </div>
+        <h1>شكراً لك! تم استلام بلاغك بنجاح</h1>
+        
+        <div class="btn-group">
+            <a href="{{ url_for('streetwatch') }}" class="btn btn-primary">🔄 تقديم بلاغ عن عطل آخر</a>
+            <a href="{{ url_for('index') }}" class="btn btn-secondary">🏠 العودة للقائمة الرئيسية</a>
+        </div>
+    </div>
+
+</body>
+</html>

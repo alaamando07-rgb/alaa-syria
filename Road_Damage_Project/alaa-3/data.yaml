@@ -1,0 +1,21 @@
+names:
+- p1
+- p10
+- p2
+- p3
+- p4
+- p5
+- p6
+- p7
+- p8
+- p9
+nc: 10
+roboflow:
+  license: CC BY 4.0
+  project: alaa-phtty
+  url: https://universe.roboflow.com/alaa-cyep2/alaa-phtty/dataset/3
+  version: 3
+  workspace: alaa-cyep2
+test: ../test/images
+train: ../train/images
+val: ../valid/images

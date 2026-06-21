@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم والتحليلات المركزية الضخمة | بوابة الحكومة الرقمية</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2=family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        /* نظام الألوان الفاتح والملكي الجديد بالتوافق مع الهوية الجديدة */
+        :root {
+            --primary-green: #09392b;
+            --accent-gold: #c59324;
+            --light-bg: #f4f7f5;
+            --dark-text: #2d3748;
+            --border-color: #cbd5e1;
+            --card-bg: #ffffff;
+            --crimson: #e74c3c;
+            --emerald: #2ecc71;
+            --neon-blue: #00b4d8;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--dark-text);
+            font-family: 'Tajawal', sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Sidebar Styling المصلح ليتوافق مع الهوية البيضاء */
+        .sidebar-panel {
+            background: #ffffff;
+            border-left: 3px solid var(--primary-green);
+            min-height: 100vh;
+            position: fixed;
+            right: 0;
+            top: 0;
+            width: 280px;
+            padding: 35px 20px;
+            z-index: 1000;
+            box-shadow: 4px 0 15px rgba(0,0,0,0.05);
+        }
+
+        .sidebar-panel .nav-link {
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .sidebar-panel .nav-link.active {
+            background-color: rgba(9, 57, 43, 0.08);
+            color: var(--primary-green) !important;
+        }
+
+        .sidebar-panel .nav-link:hover:not(.active) {
+            background-color: #f1f5f9;
+        }
+
+        .main-wrapper {
+            margin-right: 280px;
+            padding: 45px;
+        }
+
+        /* Giant Stats Cards - الثيم الفاتح والنظيف */
+        .analytics-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 25px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+        }
+
+        .analytics-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-gold);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+        }
+
+        /* Nav Tabs Layout */
+        .custom-tab-header {
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 40px;
+        }
+
+        .custom-tab-header .nav-link {
+            color: #718096;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: 500;
+            padding: 15px 30px;
+            background: transparent;
+            transition: all 0.3s ease;
+        }
+
+        .custom-tab-header .nav-link.active {
+            color: var(--primary-green);
+            border-bottom: 3px solid var(--primary-green);
+            font-weight: 700;
+        }
+
+        /* Data Containers */
+        .massive-table-container {
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+        }
+
+        .image-preview-slot {
+            width: 70px;
+            height: 50px;
+            border-radius: 6px;
+            object-fit: cover;
+            border: 2px solid var(--accent-gold);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .image-preview-slot:hover {
+            transform: scale(1.1);
+        }
+
+        .scrollable-feed {
+            max-height: 600px;
+            overflow-y: auto;
+            padding-left: 10px;
+        }
+        .scrollable-feed::-webkit-scrollbar { width: 6px; }
+        .scrollable-feed::-webkit-scrollbar-thumb { background: var(--primary-green); border-radius: 10px; }
+
+        .status-pill {
+            padding: 5px 12px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        /* تنسيق الجداول لتلائم المظهر الفاتح الراقي */
+        .table-light-custom thead th {
+            background-color: #f8fafc !important;
+            color: var(--primary-green) !important;
+            font-weight: 700;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .table-light-custom tbody td {
+            color: var(--dark-text) !important;
+            border-bottom: 1px solid #f1f5f9;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar-panel">
+        <div class="text-center mb-5">
+            <h3 class="fw-bold m-0" style="color: var(--primary-green); letter-spacing: 1px;">SYRIA DIGITAL</h3>
+            <small class="text-secondary">منظومة الإدارة المركزية 2026</small>
+        </div>
+        <div class="nav flex-column">
+            <a class="nav-link active py-3 text-dark" href="#"><i class="fas fa-chart-line ms-3 text-success"></i> لوحة التحليل الشاملة</a>
+            <a class="nav-link py-3 text-dark" href="#pane-accounts" onclick="document.getElementById('tab-accounts-btn').click();"><i class="fas fa-users-cog ms-3 text-primary"></i> إدارة الحسابات والبطاقات</a>
+            <hr style="border-color: var(--border-color)">
+            <a class="nav-link text-danger py-3" href="/logout"><i class="fas fa-power-off ms-3"></i> تسجيل الخروج الآمن</a>
+        </div>
+    </div>
+
+    <div class="main-wrapper">
+        <header class="d-flex justify-content-between align-items-center mb-5">
+            <div>
+                <h1 class="fw-black m-0 text-dark" style="font-weight: 900;">منصة التحليلات المتقدمة ورقابة البيانات</h1>
+                <p class="text-secondary mt-2 fs-5">تتبع فوري ومباشر لمدخلات المستخدم والتحكم الكامل بالحسابات</p>
+            </div>
+            <div class="text-end">
+                <span class="badge bg-success p-3 rounded-3 fs-6 bg-opacity-75"><i class="fas fa-shield-alt ml-2"></i> ربط العمليات الباك إند: نشط</span>
+            </div>
+        </header>
+
+        <div class="row g-4 mb-5">
+            <div class="col-md-3">
+                <div class="analytics-card d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-secondary fw-bold">إجمالي البلاغات (YOLOv8)</h6>
+                        <h2 class="fw-black mt-2 m-0 text-dark" style="font-weight: 900;" id="count-reports">{{ reports|length }} بلاغ</h2>
+                    </div>
+                    <i class="fas fa-road fa-2x text-success opacity-50"></i>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="analytics-card d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-secondary fw-bold">سجل الفواتير والمدفوعات</h6>
+                        <h2 class="fw-black mt-2 m-0" style="font-weight: 900; color: #1e7e34;" id="count-payments">{{ payments|length }} عملية</h2>
+                    </div>
+                    <i class="fas fa-wallet fa-2x text-success opacity-50"></i>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="analytics-card d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-secondary fw-bold">حالات استغاثة طوارئ 333</h6>
+                        <h2 class="fw-black mt-2 m-0 text-danger" style="font-weight: 900;" id="count-emergency">{{ emergency|length }} نداء</h2>
+                    </div>
+                    <i class="fas fa-ambulance fa-2x text-danger opacity-50"></i>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="analytics-card d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-secondary fw-bold">إجمالي الحسابات المنشأة</h6>
+                        <h2 class="fw-black mt-2 m-0 text-primary" style="font-weight: 900;" id="count-users">{{ users|length if users else '0' }} حساب</h2>
+                    </div>
+                    <i class="fas fa-users fa-2x text-primary opacity-50"></i>
+                </div>
+            </div>
+        </div>
+
+        <ul class="nav nav-tabs custom-tab-header" id="massiveAdminTabs" role="tablist">
+            <li class="nav-item">
+                <button class="nav-link active" id="tab-yolo-btn" data-bs-toggle="tab" data-bs-target="#pane-yolo" type="button" role="tab"><i class="fas fa-brain ms-2"></i> رصد وتحليل الـ AI (YOLOv8)</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" id="tab-billing-btn" data-bs-toggle="tab" data-bs-target="#pane-billing" type="button" role="tab"><i class="fas fa-dollar-sign ms-2"></i> المعاملات والمدفوعات الحكومية</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" id="tab-emergency-btn" data-bs-toggle="tab" data-bs-target="#pane-emergency" type="button" role="tab"><i class="fas fa-heartbeat ms-2"></i> نداءات وحدة الطوارئ المركزية</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" id="tab-accounts-btn" data-bs-toggle="tab" data-bs-target="#pane-accounts" type="button" role="tab"><i class="fas fa-user-shield ms-2"></i> لوحة التحكم الشاملة بالحسابات والبطاقات</button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="massiveAdminTabsContent">
+            
+            <div class="tab-pane fade show active" id="pane-yolo" role="tabpanel">
+                <div class="row g-4">
+                    <div class="col-lg-4">
+                        <div class="analytics-card h-100">
+                            <h5 class="fw-bold mb-4" style="color: var(--primary-green);"><i class="fas fa-chart-pie ms-2"></i> توزيع الكلاسات المرصودة</h5>
+                            <div style="height: 300px; position: relative;">
+                                <canvas id="yoloMassiveChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-8">
+                        <div class="massive-table-container h-100">
+                            <h5 class="fw-bold mb-4 text-dark">جدول تحليل وتدقيق الصور الفوري</h5>
+                            <div class="table-responsive scrollable-feed">
+                                <table class="table table-hover align-middle m-0 table-light-custom">
+                                    <thead>
+                                        <tr>
+                                            <th>الصورة والتحليل</th>
+                                            <th>الكائن المكتشف</th>
+                                            <th>الموقع الجغرافي</th>
+                                            <th>تاريخ البلاغ</th>
+                                            <th>درجة الخطورة</th>
+                                            <th>نسبة الثقة %</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% if reports %}
+                                            {% for report in reports %}
+                                            <tr>
+                                                <td>
+                                                    <img src="{{ url_for('static', filename='uploads/' + report[0]) }}" 
+                                                         class="image-preview-slot" 
+                                                         alt="YOLOv8 Analysis" 
+                                                         data-bs-toggle="modal" 
+                                                         data-bs-target="#imageModal" 
+                                                         onclick="showGiantImage(this.src)">
+                                                </td>
+                                                <td class="fw-bold text-dark unique-class-name">{{ report[1] }}</td>
+                                                <td class="small text-secondary"><i class="fas fa-map-marker-alt ms-1 text-muted"></i>{{ report[2] }}</td>
+                                                <td class="small text-muted">{{ report[3] }}</td>
+                                                <td>
+                                                    <span class="status-pill {% if report[4] == 'حرجة جداً' %}bg-danger text-white{% else %}bg-warning text-dark{% endif %}">
+                                                        {{ report[4] }}
+                                                    </span>
+                                                </td>
+                                                <td class="fw-bold text-info">{{ report[6] if report|length > 6 else '0%' }}</td>
+                                            </tr>
+                                            {% endfor %}
+                                        {% else %}
+                                            <tr><td colspan="6" class="text-center py-5 text-secondary">لا يوجد بيانات بلاغات طرق واصلة للباك إند حالياً.</td></tr>
+                                        {% endif %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="pane-billing" role="tabpanel">
+                <div class="massive-table-container">
+                    <h5 class="fw-bold mb-4" style="color: var(--primary-green);"><i class="fas fa-receipt ms-2"></i> كشف العمليات المالية </h5>
+                    <div class="table-responsive scrollable-feed">
+                        <table class="table table-hover align-middle table-light-custom">
+                            <thead>
+                                <tr>
+                                    <th>نوع الخدمة / الفاتورة</th>
+                                    <th>القيمة المالية المستحقة</th>
+                                    <th>طريقة الدفع وقناة الإدخال</th>
+                                    <th>رقم الحساب التابع / المستخدم</th>
+                                    <th>طابع وقت المعاملة</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if payments %}
+                                    {% for pay in payments %}
+                                    <tr>
+                                        <td class="fw-bold text-dark">{{ pay[3] }}</td>
+                                        <td class="fw-black text-success fs-5" style="font-weight: 800;">{{ pay[2] }} ل.س</td>
+                                        <td>
+                                            {% if pay[0] == 'بطاقة بنكية' or pay[0] == 'bank_card' %}
+                                                <span class="badge bg-primary p-2"><i class="fas fa-credit-card ms-1"></i> بطاقة بنكية</span>
+                                            {% elif pay[0] == 'شام كاش' or pay[0] == 'cham_cash' %}
+                                                <span class="badge bg-success p-2"><i class="fas fa-coins ms-1"></i> شام كاش</span>
+                                            {% elif pay[0] == 'محفظة الكترونية' or pay[0] == 'wallet' %}
+                                                <span class="badge bg-warning text-dark p-2"><i class="fas fa-mobile-alt ms-1"></i> محفظة إلكترونية</span>
+                                            {% else %}
+                                                <span class="badge bg-secondary p-2">{{ pay[0] }}</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-dark fw-semibold">
+                                            {% if pay[1] and pay[1] != 'None' and pay[1] != '' %}
+                                                {{ pay[1] }}
+                                            {% else %}
+                                                <span class="text-muted italic">غير محدد</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="small text-muted">{{ pay[4] }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr><td colspan="5" class="text-center py-5 text-secondary">لا يوجد فواتير أو مدفوعات واصلة لقاعدة البيانات حتى الآن.</td></tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="pane-emergency" role="tabpanel">
+                <div class="massive-table-container">
+                    <h5 class="fw-bold mb-4 text-danger"><i class="fas fa-shield-virus ms-2"></i> وحدة الرصد والتحرك الميداني السريع</h5>
+                    <div class="scrollable-feed">
+                        {% if emergency %}
+                            {% for emg in emergency %}
+                            <div class="p-4 mb-3 rounded-3 border border-1" style="background: rgba(231, 76, 60, 0.02); border-color: rgba(231, 76, 60, 0.15) !important;">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h5 class="text-danger fw-bold m-0"><i class="fas fa-exclamation-circle ms-2"></i>{{ emg[2] }}</h5>
+                                    <span class="badge bg-danger">{{ emg[4] }}</span>
+                                </div>
+                                <div class="row g-3 text-secondary small">
+                                    <div class="col-md-4"><strong><i class="fas fa-user ms-1"></i> المستغيث:</strong> <span class="text-dark font-semibold">{{ emg[0] }}</span></div>
+                                    <div class="col-md-4"><strong><i class="fas fa-phone ms-1"></i> رقم الهاتف:</strong> <span class="text-dark font-semibold">{{ emg[1] }}</span></div>
+                                    <div class="col-md-4"><strong><i class="fas fa-map-marked-alt ms-1"></i> العنوان المستهدف:</strong> <span class="text-primary fw-semibold">{{ emg[3] }}</span></div>
+                                    <div class="col-12 mt-2"><strong><i class="fas fa-sticky-note ms-1"></i> ملاحظات الحالة:</strong> <p class="text-dark m-0 mt-1 p-2 rounded" style="background: #f8fafc; border: 1px solid var(--border-color);">{{ emg[5] if emg|length > 5 else 'لا يوجد ملاحظات إضافية' }}</p></div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="text-center py-5 text-success">
+                                <i class="fas fa-check-circle fa-4x mb-3 opacity-50"></i>
+                                <h5 class="m-0 fw-bold">المنظومة مستقرة بالكامل: لا يوجد أي استغاثات طوارئ نشطة حالياً.</h5>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="pane-accounts" role="tabpanel">
+                <div class="massive-table-container">
+                    <h5 class="fw-bold mb-4" style="color: var(--primary-green);"><i class="fas fa-users-cog ms-2"></i> التحكم الكامل بحسابات وبطاقات المواطنين النشطة</h5>
+                    <div class="table-responsive scrollable-feed">
+                        <table class="table table-hover align-middle table-light-custom">
+                            <thead>
+                                <tr>
+                                    <th>اسم المستخدم</th>
+                                    <th>كلمة السر</th>
+                                    <th>العمليات والنشاطات</th>
+                                    <th>الفواتير المدفوعة</th>
+                                    <th>رصيد البطاقة الإلكترونية</th>
+                                    <th>إجراءات التحكم والتحرير الحية</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if users %}
+                                    {% for user in users %}
+                                    <tr>
+                                        <td class="fw-bold text-dark"><i class="fas fa-user-circle text-secondary ms-1"></i> {{ user.username }}</td>
+                                        <td><code class="text-dark bg-light p-1 rounded">{{ user.password }}</code></td>
+                                        <td>
+                                            <small class="text-secondary d-block">آخر عمل: {{ user.last_action if user.last_action else 'تصفح البوابة الرقمية' }}</small>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-opacity-10 bg-success text-success p-2 fw-bold">{{ user.paid_bills_count if user.paid_bills_count else '0' }} فواتير مدفوعة</span>
+                                        </td>
+                                        <td class="fw-bold text-success fs-5">
+                                            <span id="balance-val-{{ user.id }}">{{ user.card_balance if user.card_balance else '0' }}</span> ل.س
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-sm btn-success rounded-3 px-3 ms-1" data-bs-toggle="modal" data-bs-target="#balanceModal" onclick="prepareBalanceAction('{{ user.id }}', '{{ user.username }}', 'add')">
+                                                <i class="fas fa-plus-circle me-1"></i> شحن رصيد
+                                            </button>
+                                            <button class="btn btn-sm btn-danger rounded-3 px-3" data-bs-toggle="modal" data-bs-target="#balanceModal" onclick="prepareBalanceAction('{{ user.id }}', '{{ user.username }}', 'deduct')">
+                                                <i class="fas fa-minus-circle me-1"></i> خصم رصيد
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr>
+                                        <td class="fw-bold text-dark"><i class="fas fa-user-circle text-secondary ms-1"></i> Ahmad_88</td>
+                                        <td><code class="text-dark bg-light p-1 rounded">Aa123456!</code></td>
+                                        <td><small class="text-secondary d-block">تقديم بلاغ رصد طرق طوارئ 333</small></td>
+                                        <td><span class="badge bg-opacity-10 bg-success text-success p-2 fw-bold">3 فواتير مدفوعة</span></td>
+                                        <td class="fw-bold text-success fs-5"><span>750,000</span> ل.س</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-success rounded-3 px-3 ms-1" data-bs-toggle="modal" data-bs-target="#balanceModal" onclick="prepareBalanceAction('1', 'Ahmad_88', 'add')"><i class="fas fa-plus-circle me-1"></i> شحن</button>
+                                            <button class="btn btn-sm btn-danger rounded-3 px-3" data-bs-toggle="modal" data-bs-target="#balanceModal" onclick="prepareBalanceAction('1', 'Ahmad_88', 'deduct')"><i class="fas fa-minus-circle me-1"></i> خصم</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold text-dark"><i class="fas fa-user-circle text-secondary ms-1"></i> Nour_Sy</td>
+                                        <td><code class="text-dark bg-light p-1 rounded">Nour@2026</code></td>
+                                        <td><small class="text-secondary d-block">تسديد فاتورة مياه عبر شام كاش</small></td>
+                                        <td><span class="badge bg-opacity-10 bg-success text-success p-2 fw-bold">1 فاتورة مدفوعة</span></td>
+                                        <td class="fw-bold text-success fs-5"><span>120,000</span> ل.س</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-success rounded-3 px-3 ms-1" data-bs-toggle="modal" data-bs-target="#balanceModal" onclick="prepareBalanceAction('2', 'Nour_Sy', 'add')"><i class="fas fa-plus-circle me-1"></i> شحن</button>
+                                            <button class="btn btn-sm btn-danger rounded-3 px-3" data-bs-toggle="modal" data-bs-target="#balanceModal" onclick="prepareBalanceAction('2', 'Nour_Sy', 'deduct')"><i class="fas fa-minus-circle me-1"></i> خصم</button>
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content bg-white border-secondary">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title text-dark fw-bold"><i class="fas fa-search-plus ms-2"></i> فحص دقة الرصد الميداني (YOLOv8 Overlay)</h5>
+                    <button type="button" class="btn-close" data-bs-shadow="none" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center p-2">
+                    <img id="giantModalImage" src="" class="img-fluid rounded" style="max-height: 75vh; width: auto;" alt="YOLO Full Screen">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="balanceModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-white">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title text-dark fw-bold" id="balanceModalTitle">تعديل رصيد بطاقة المستخدم</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="balanceForm" method="POST" action="/admin/update-balance">
+                    <div class="modal-body">
+                        <input type="hidden" name="user_id" id="modal_user_id">
+                        <input type="hidden" name="action_type" id="modal_action_type">
+                        <p class="fs-6 text-secondary">أنت الآن تقوم بالتحكم بحساب المستخدم: <strong id="modal_username_display" class="text-dark"></strong></p>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-dark">المبلغ المالي المراد تعديله (ل.س)</label>
+                            <input type="number" name="amount" class="form-control" placeholder="أدخل القيمة المالية هنا..." required min="1">
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0">
+                        <button type="button" class="btn btn-secondary rounded-3" data-bs-dismiss="modal">إلغاء المعاملة</button>
+                        <button type="submit" class="btn id-submit-btn rounded-3 text-white" id="modalSubmitBtn">تنفيذ الأمر</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function showGiantImage(src) {
+            document.getElementById('giantModalImage').src = src;
+        }
+
+        function prepareBalanceAction(userId, username, type) {
+            document.getElementById('modal_user_id').value = userId;
+            document.getElementById('modal_action_type').value = type;
+            document.getElementById('modal_username_display').innerText = username;
+            
+            const submitBtn = document.getElementById('modalSubmitBtn');
+            const title = document.getElementById('balanceModalTitle');
+            
+            if(type === 'add') {
+                title.innerText = "شحن وإضافة رصيد مالي";
+                submitBtn.innerText = "تأكيد إضافة الأموال";
+                submitBtn.className = "btn btn-success rounded-3";
+            } else {
+                title.innerText = "خصم واقتطاع رصيد مالي";
+                submitBtn.innerText = "تأكيد خصم الأموال";
+                submitBtn.className = "btn btn-danger rounded-3";
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            let potholeCount = parseInt("{{ pothole_count }}") || 0;
+            let poleCount = parseInt("{{ pole_count }}") || 0;
+            let cleanCount = parseInt("{{ clean_count }}") || 0;
+
+            if(potholeCount === 0 && poleCount === 0 && cleanCount === 0) {
+                cleanCount = 1; 
+            }
+
+            const ctx = document.getElementById('yoloMassiveChart');
+            if (ctx) {
+                new Chart(ctx.getContext('2d'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['حفر وتصدعات إسفلتية', 'أعمدة تالفة كهرباء', 'بلاغات عامة / سليم'],
+                        datasets: [{
+                            data: [potholeCount, poleCount, cleanCount],
+                            backgroundColor: ['#e74c3c', '#c59324', '#00b4d8'],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: { color: '#2d3748', font: { family: 'Tajawal', size: 11 } }
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

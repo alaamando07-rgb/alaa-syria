@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة المدفوعات الإلكترونية الموحدة | سوريا 2026</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <!-- تم اعتماد خط Cairo المتناسق مع الهوية الجديدة بدلاً من Tajawal -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2 family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-green: #09392b;
+            --accent-gold: #c59324;
+            --accent-gold-hover: #a4791c;
+            --light-bg: #f4f7f5;
+            --dark-text: #2d3748;
+            --border-color: #e2e8f0;
+            --card-bg: #ffffff;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            background-color: var(--light-bg);
+            color: var(--dark-text);
+            font-family: 'Cairo', 'Segoe UI', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* إلغاء الـ fixed القديم للمظهر الغامق واعتام صورة فاتحة خفيفة كخلفية مستوحاة من الموقع الرئيسي */
+        .hero-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: linear-gradient(rgba(244, 247, 245, 0.85), rgba(244, 247, 245, 0.95)),    
+                        url("{{ url_for('static', filename='uploads/hero.png') }}") no-repeat;
+            background-position: center;
+            background-size: cover;
+            z-index: -2;
+        }
+
+        /* الهيدر النظيف والأبيض المعتمد للهوية الجديدة */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: #ffffff;
+            border-bottom: 3px solid var(--primary-green);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .user-badge {
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: 30px;
+            color: var(--dark-text);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+        }
+
+        .main-container {
+            margin-top: 130px;
+            padding-bottom: 60px;
+        }
+
+        /* تحويل الكارد الأساسي من الزجاجي المظلم إلى لوحة بيضاء أنيقة متوافقة مع واجهة الحفر */
+        .glass-panel-billing {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04);
+        }
+
+        .field-label {
+            color: var(--dark-text);
+            margin-bottom: 8px;
+            font-weight: 600;
+            display: block;
+            font-size: 0.9rem;
+        }
+
+        /* تعديل المدخلات لتصبح بخلفية فاتحة ونصوص داكنة */
+        .iphone-input {
+            color: var(--dark-text) !important;
+            background: #f8fafc !important;
+            border: 1px solid var(--border-color) !important;
+            border-radius: 8px;
+            padding: 12px;
+            transition: 0.2s ease-in-out;
+            font-size: 14px;
+        }
+
+        .iphone-input:focus {
+            background: #ffffff !important;
+            border-color: var(--primary-green) !important;
+            box-shadow: 0 0 0 3px rgba(9, 57, 43, 0.1) !important;
+        }
+
+        /* تعديل أزرار قنوات السداد */
+        .method-btn {
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            color: var(--dark-text);
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            transition: 0.2s all ease;
+            text-align: center;
+        }
+
+        .method-btn:hover, .method-btn.active-mode {
+            border-color: var(--primary-green);
+            background: rgba(9, 57, 43, 0.05);
+            color: var(--primary-green);
+        }
+
+        .bill-info-box {
+            background: #f8fafc;
+            border: 1px dashed rgba(9, 57, 43, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        /* الزر الذهبي الرسمي الجديد تماماً */
+        .btn-submit-gold {
+            background: var(--accent-gold);
+            color: #ffffff !important;
+            font-weight: 700;
+            border-radius: 8px;
+            padding: 14px;
+            font-size: 15px;
+            border: none;
+            transition: 0.3s ease;
+            box-shadow: 0 4px 12px rgba(197, 147, 36, 0.2);
+        }
+
+        .btn-submit-gold:hover:not([disabled]) {
+            background-color: var(--accent-gold-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(197, 147, 36, 0.3);
+        }
+        
+        /* واجهة التقرير المحدثة باللون الفاتح */
+        .report-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04);
+        }
+        
+        .table-custom {
+            color: var(--dark-text) !important;
+        }
+        .table-custom td {
+            padding: 12px;
+            border-color: var(--border-color) !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hero-background"></div>
+
+    <header>
+        <div class="d-flex align-items-center gap-3">
+            <a href="/" class="btn btn-outline-secondary btn-sm rounded-3 px-3 py-2 fw-bold text-dark border-secondary-subtle"><i class="fas fa-arrow-right me-1"></i> زر الرجوع للخلف</a>
+            
+            {% if session.get('user_name') %}
+                <div class="user-badge" style="border-color: #2ecc71;">
+                    <i class="fas fa-wallet text-success"></i>
+                    <span>رصيد الحساب المتاح: <strong class="text-success" id="header-balance-val">{{ session.get('user_balance', 0) }}</strong> ل.س</span>
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="text-end">
+            <h3 class="m-0 fw-bold" style="color: var(--primary-green); font-size: 20px; letter-spacing: 0.5px;">SYRIA DIGITAL</h3>
+            <div class="d-flex align-items-center justify-content-end gap-2">
+                <small class="text-muted" style="font-size: 11px;">بوابة المدفوعات الحكومية</small>
+                <i class="fas fa-landmark" style="color: var(--primary-green);"></i>
+            </div>
+        </div>
+    </header>
+
+    <div class="container main-container">
+        <div id="payment-interface" class="glass-panel-billing mx-auto" style="max-width: 750px;" data-aos="fade-up">
+            
+            <form id="billingForm" method="POST" action="" onsubmit="handleFormSubmit(event)">
+                
+                <div class="text-center mb-4">
+                    <h2 class="fw-bold" style="color: var(--primary-green); font-size: 24px;">تسديد الرسوم والفواتير المركزية</h2>
+                    <p class="text-muted" style="font-size: 13px;">يرجى اختيار نوع الخدمة وتحديد طريقة الدفع لإتمام المقاصة المادية</p>
+                </div>
+
+                <div class="mb-4">
+                    <label class="field-label">نوع الخدمة الحكومية</label>
+                    <select id="bill_type" name="bill_type" class="form-select iphone-input w-100" onchange="updateBillFields()" required>
+                        <option value="">-- اختر الفاتورة المراد دفعها --</option>
+                        <option value="فاتورة مياه">فاتورة مياه</option>
+                        <option value="فاتورة كهرباء">فاتورة كهرباء</option>
+                        <option value="فاتورة اتصالات">فاتورة اتصالات (هاتف أرضي وإنترنت)</option>
+                        <option value="معاملات النقل">معاملات النقل والمرور</option>
+                        <option value="التعليم الخاص">التعليم الخاص (مدارس وجامعات)</option>
+                    </select>
+                </div>
+
+                <div id="bill-fields-container" class="bill-info-box" style="display:none;"></div>
+
+                <div class="mb-4">
+                    <label class="field-label">وسيلة السداد الرقمية</label>
+                    <div class="row g-2">
+                        
+                        {% if session.get('user_name') %}
+                        <div class="col-12 mb-1">
+                            <button type="button" id="btn-wallet" class="btn method-btn w-100 text-start d-flex justify-content-between align-items-center" onclick="setPaymentMethod('wallet')">
+                                <span><i class="fas fa-wallet text-warning me-2"></i> خانة المحفظة الإلكترونية المركزية</span>
+                                <small class="text-muted">الدفع المباشر من رصيد الحساب الحالي</small>
+                            </button>
+                        </div>
+                        {% endif %}
+                        
+                        <div class="col-3"><button type="button" id="btn-syriatel" class="btn method-btn w-100" onclick="setPaymentMethod('syriatel')">شام كاش</button></div>
+                        <div class="col-3"><button type="button" id="btn-mtn" class="btn method-btn w-100" onclick="setPaymentMethod('mtn')">سيرياتيل كاش</button></div>
+                        <div class="col-3"><button type="button" id="btn-sham" class="btn method-btn w-100" onclick="setPaymentMethod('sham')">MTN كاش</button></div>
+                        <div class="col-3"><button type="button" id="btn-bank" class="btn method-btn w-100" onclick="setPaymentMethod('bank')">بنوك محلية</button></div>
+                    </div>
+                    
+                    <input type="hidden" id="selected_method" name="payment_method" required>
+                </div>
+
+                <div id="payment-fields-container"></div>
+
+                <div id="amount-input-wrapper" class="mb-4" style="display: none;">
+                    <label class="field-label">المبلغ المطلوب دفعه (ل.س)</label>
+                    <input type="number" id="final_amount" name="amount" class="form-control iphone-input" placeholder="أدخل قيمة الفاتورة المراد سدادها" oninput="checkWalletBalanceLogic()" required>
+                    
+                    <div id="balance-warning-msg" class="text-danger small mt-2" style="display: none;">
+                        <i class="fas fa-ban me-1"></i> عذراً، لا يمكنك تجاوز رصيدك المتاح!  .
+                    </div>
+                </div>
+
+                <button type="submit" id="btn-main-submit" class="btn btn-submit-gold w-100 mt-2">
+                    <i class="fas fa-check-circle me-1"></i> معالجة وإرسال الفاتورة
+                </button>
+            </form>
+        </div>
+
+        <div id="report-interface" class="report-box mx-auto" style="max-width: 700px; display: none;">
+            <div class="text-center mb-4">
+                <div class="display-1 text-success mb-2"><i class="fas fa-check-circle"></i></div>
+                <h3 class="fw-bold text-success">تمت عملية المعالجة بنجاح</h3>
+                <p class="text-muted">تم ترحيل وحفظ بيانات الفاتورة بنجاح في قاعدة البيانات</p>
+            </div>
+            
+            <div class="table-responsive my-4">
+                <table class="table table-striped table-bordered border-light-subtle m-0 table-custom">
+                    <tbody>
+                        <tr><td class="fw-bold w-40" style="color: var(--primary-green);">نوع الخدمة المنجزة</td><td id="rep-type" class="text-dark"></td></tr>
+                        <tr><td class="fw-bold" style="color: var(--primary-green);">قناة السداد المستخدمة</td><td id="rep-method" class="text-dark"></td></tr>
+                        <tr><td class="fw-bold" style="color: var(--primary-green);">المعرف المدخل</td><td id="rep-details" class="text-dark"></td></tr>
+                        <tr><td class="fw-bold" style="color: var(--primary-green);">المبلغ الذي تم خصمه</td><td id="rep-amount" class="text-success fw-bold"></td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="row g-2 mt-4">
+                <div class="col-6">
+                    <button class="btn btn-outline-warning w-100 py-2.5 fw-bold text-dark border-warning-subtle" onclick="resetPaymentForm()"><i class="fas fa-sync me-1"></i> دفع مرة أخرى</button>
+                </div>
+                <div class="col-6">
+                    <a href="/" class="btn btn-secondary w-100 py-2.5 fw-bold text-white text-decoration-none d-block text-center" style="background: var(--primary-green); border: none;"><i class="fas fa-arrow-left me-1"></i> الرجوع للخلفية</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 800, once: true });
+
+        const balanceElement = document.getElementById('header-balance-val');
+        let userActualBalance = balanceElement ? parseFloat(balanceElement.innerText.replace(/,/g, '')) : 0;
+        let selectedMode = '';
+
+        function applyLengthLimit(element, maximumLength) {
+            element.value = element.value.replace(/[^0-9]/g, '');
+            if (element.value.length > maximumLength) {
+                element.value = element.value.slice(0, maximumLength);
+            }
+        }
+
+        function applyFiveDigitsLimit(element) {
+            element.value = element.value.replace(/[^0-9]/g, '');
+            if (element.value.length > 5) {
+                element.value = element.value.slice(0, 5);
+            }
+        }
+
+        function checkWalletBalanceLogic() {
+            const amountField = document.getElementById('final_amount');
+            const insertedAmount = parseFloat(amountField.value) || 0;
+            const warningMessage = document.getElementById('balance-warning-msg');
+            const submitButton = document.getElementById('btn-main-submit');
+
+            if (selectedMode === 'wallet' && insertedAmount > userActualBalance) {
+                warningMessage.style.display = 'block';
+                submitButton.disabled = true;
+            } else {
+                warningMessage.style.display = 'none';
+                submitButton.disabled = false;
+            }
+        }
+
+        function updateBillFields() {
+            const billType = document.getElementById('bill_type').value;
+            const fieldsContainer = document.getElementById('bill-fields-container');
+            fieldsContainer.style.display = billType ? 'block' : 'none';
+            let generatedHtml = '';
+
+            if (billType === 'فاتورة مياه') {
+                generatedHtml = `
+                    <div class="mb-3">
+                        <label class="field-label">رقم الباركود الفعلي (6 أرقام فقط)</label>
+                        <input type="text" name="barcode" class="form-control iphone-input" placeholder="الباركود المطبوع على الفاتورة" oninput="applyLengthLimit(this, 6)" required>
+                    </div>
+                    <div>
+                        <label class="field-label">رقم العداد الميكانيكي (6 أرقام فقط)</label>
+                        <input type="text" name="counter" class="form-control iphone-input" placeholder="رقم العداد الحالي" oninput="applyLengthLimit(this, 6)" required>
+                    </div>`;
+            } else if (billType === 'فاتورة كهرباء') {
+                generatedHtml = `
+                    <div class="mb-3">
+                        <label class="field-label">رقم الفوترة الإلكتروني (6 أرقام فقط)</label>
+                        <input type="text" name="b_num" class="form-control iphone-input" placeholder="رقم الفاتورة الآلي" oninput="applyLengthLimit(this, 6)" required>
+                    </div>
+                    <div>
+                        <label class="field-label">رقم الاشتراك المالي (6 أرقام فقط)</label>
+                        <input type="text" name="s_num" class="form-control iphone-input" placeholder="رقم الاشتراك الموحد" oninput="applyLengthLimit(this, 6)" required>
+                    </div>`;
+            } else if (billType === 'فاتورة اتصالات') {
+                generatedHtml = `
+                    <div>
+                        <label class="field-label">رقم الهاتف الأرضي مع رمز النداء (10 خانات)</label>
+                        <input type="text" name="landline" class="form-control iphone-input" placeholder="011xxxxxxx" oninput="applyLengthLimit(this, 10)" required>
+                    </div>`;
+            } else if (billType === 'معاملات النقل') {
+                generatedHtml = `
+                    <div class="mb-3">
+                        <label class="field-label">رقم المعاملة النظامي</label>
+                        <input type="text" name="trans_id" class="form-control iphone-input" placeholder="رقم المعاملة" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
+                    </div>
+                    <div>
+                        <label class="field-label">رقم لوحة المركبة الكامل</label>
+                        <input type="text" name="plate_number" class="form-control iphone-input" placeholder="مثال: دمشق - 123456" required>
+                    </div>`;
+            } else if (billType === 'التعليم الخاص') {
+                generatedHtml = `
+                    <div class="mb-3">
+                        <label class="field-label">الاسم الثلاثي الكامل للطالب</label>
+                        <input type="text" name="student_name" class="form-control iphone-input" required>
+                    </div>
+                    <div>
+                        <label class="field-label">الرقم الدراسي الجامعي الموحد</label>
+                        <input type="text" name="student_id" class="form-control iphone-input" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
+                    </div>`;
+            }
+            fieldsContainer.innerHTML = generatedHtml;
+        }
+
+        function setPaymentMethod(methodName) {
+            selectedMode = methodName;
+            document.getElementById('selected_method').value = methodName;
+
+            if(document.getElementById('btn-wallet')) document.getElementById('btn-wallet').classList.remove('active-mode');
+            document.querySelectorAll('.method-btn').forEach(button => button.classList.remove('active-mode'));
+
+            const pFields = document.getElementById('payment-fields-container');
+            const targetButton = document.getElementById('btn-' + methodName);
+            if (targetButton) targetButton.classList.add('active-mode');
+
+            document.getElementById('amount-input-wrapper').style.display = 'block';
+
+            if (methodName === 'wallet') {
+                pFields.innerHTML = ``; 
+            } else if (methodName === 'syriatel' || methodName === 'mtn' || methodName === 'sham') {
+                pFields.innerHTML = `
+                    <div class="mb-4">
+                        <label class="field-label">رقم التعريف الخاص بالحساب الجاري (حد أقصى 5 أرقام)</label>
+                        <input type="text" name="payer_account" class="form-control iphone-input" placeholder="xxxxx" oninput="applyFiveDigitsLimit(this)" required>
+                    </div>`;
+            } else if (methodName === 'bank') {
+                pFields.innerHTML = `
+                    <div class="mb-3">
+                        <label class="field-label">اسم المصرف السوري المحلي</label>
+                        <select name="bank_name" class="form-select iphone-input w-100">
+                            <option>المصرف التجاري السوري</option>
+                            <option>بنك بيمو السعودي الفرنسي</option>
+                            <option>بنك البركة سوريا</option>
+                            <option>بنك سوريا الدولي الإسلامي</option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label class="field-label">رقم الحساب المصرفي المكون من 5 خانات</label>
+                        <input type="text" name="payer_account" class="form-control iphone-input" oninput="applyFiveDigitsLimit(this)" required>
+                    </div>`;
+            }
+            checkWalletBalanceLogic();
+        }
+
+        function handleFormSubmit(event) {
+            event.preventDefault(); 
+            
+            const formElement = document.getElementById('billingForm');
+            const formData = new FormData(formElement);
+            const amountField = document.getElementById('final_amount');
+            const deductedAmount = parseFloat(amountField.value) || 0;
+
+            fetch(window.location.href, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (selectedMode === 'wallet') {
+                    userActualBalance = userActualBalance - deductedAmount;
+                    if (balanceElement) {
+                        balanceElement.innerText = Number(userActualBalance).toLocaleString();
+                    }
+                }
+
+                document.getElementById('rep-type').innerText = document.getElementById('bill_type').value;
+                document.getElementById('rep-method').innerText = selectedMode === 'wallet' ? 'المحفظة الإلكترونية المركزية' : selectedMode.toUpperCase() + ' كاش';
+                
+                const accountField = formElement.querySelector('[name="payer_account"]') || formElement.querySelector('[name="barcode"]') || formElement.querySelector('[name="landline"]');
+                document.getElementById('rep-details').innerText = accountField ? accountField.value : 'معرف مستخدم موثق ونظامي';
+                document.getElementById('rep-amount').innerText = deductedAmount.toLocaleString() + ' ل.س';
+
+                document.getElementById('payment-interface').style.display = 'none';
+                document.getElementById('report-interface').style.display = 'block';
+                window.scrollTo(0, 0);
+            })
+            .catch(error => {
+                alert('حدثت مشكلة أثناء معالجة ترحيل الفاتورة، يرجى المحاولة مرة ثانية.');
+            });
+        }
+
+        function resetPaymentForm() {
+            document.getElementById('billingForm').reset();
+            document.getElementById('bill-fields-container').style.display = 'none';
+            document.getElementById('payment-fields-container').innerHTML = '';
+            document.getElementById('amount-input-wrapper').style.display = 'none';
+            document.getElementById('report-interface').style.display = 'none';
+            document.getElementById('payment-interface').style.display = 'block';
+            if(document.getElementById('btn-wallet')) document.getElementById('btn-wallet').classList.remove('active-mode');
+            document.querySelectorAll('.method-btn').forEach(b => b.classList.remove('active-mode'));
+            selectedMode = '';
+        }
+    </script>
+</body>
+</html>

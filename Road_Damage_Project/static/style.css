@@ -1,0 +1,212 @@
+/* ==========================================================================
+   الألوان والخطوط الأساسية - النمط الأكابري الفاتح (سوريا 2026)
+   ========================================================================== */
+:root {
+    --gold: #b8860b;              
+    --gold-light: #f9f6f0;        
+    --green-dark: #0f5132;        
+    --bg-light: #f4f6f8;          
+    --card-bg: rgba(255, 255, 255, 0.95); 
+    --glass-bg: rgba(255, 255, 255, 0.85); 
+    --glass-border: #e2e8f0;      
+    --text-main: #2c3e50;         
+    --text-muted: #7f8c8d;        
+}
+
+/* إعدادات الصفحة العامة الفاتحة */
+body {
+    background-color: transparent !important; /* مصلح: لكي تظهر الصور المثبتة بالخلفية */
+    color: var(--text-main);
+    font-family: 'Tajawal', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    direction: rtl;
+    overflow-x: hidden;
+}
+
+/* ==========================================================================
+   نظام السلايد شو للخلفية المتحركة التفاعلية من Bootstrap
+   ========================================================================== */
+.hero-slideshow-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: -3; /* مرسل للخلف تماماً */
+    overflow: hidden;
+}
+
+/* تأكد أن هذه الخصائص لا تحتوي على أي كود فلاسك داخل ملف style.css */
+.carousel-fullscreen, .carousel-inner, .carousel-item {
+    width: 100%;
+    height: 100vh;
+}
+
+.carousel-item {
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+}
+
+/* تم حذف روابط الصور القسرية القديمة من هنا لأننا استدعيناها ديناميكياً بـ Flask في الـ HTML */
+
+/* طبقة حماية شفافة وناعمة لعدم حجب الخلفية وضمان مقروئية الخطوط */
+.hero-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.35); 
+    z-index: -2;
+    pointer-events: none;
+}
+
+/* ==========================================================================
+   العناصر التفاعلية والبطاقات البيضاء الفخمة
+   ========================================================================== */
+.glass-panel {
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s ease;
+    color: var(--text-main);
+}
+
+.glass-panel:hover {
+    transform: translateY(-4px);
+    border-color: var(--gold);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.06);
+}
+
+/* خانات الإدخال النظيفة والراقية (iPhone Style Light) */
+.iphone-input {
+    background: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 12px !important;
+    color: var(--text-main) !important;
+    padding: 12px 15px !important;
+    width: 100%;
+    transition: all 0.25s ease;
+}
+
+/* حل كامل لمشكلة القوائم المنسدلة بالفاتح النقي */
+.iphone-input option {
+    background-color: #ffffff !important;
+    color: var(--text-main) !important;
+    padding: 12px;
+}
+
+.iphone-input:focus {
+    background: #ffffff !important;
+    border-color: var(--gold) !important;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.15) !important;
+}
+
+/* الأزرار الذهبية الرئاسية */
+.btn-gold {
+    background: linear-gradient(145deg, #d4af37, #b8860b);
+    color: #ffffff !important;
+    font-weight: 700;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 25px;
+    transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(184, 134, 11, 0.2);
+}
+
+.btn-gold:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 6px 20px rgba(184, 134, 11, 0.35);
+}
+
+/* بطاقات الخدمات في الصفحة الرئيسية */
+.service-card {
+    background: var(--card-bg);
+    cursor: pointer;
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    transition: 0.3s all ease;
+}
+
+.service-card:hover {
+    border-color: var(--gold);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04);
+}
+
+/* أيقونات دائرية بخلفية ناعمة فاتحة ومتناسقة */
+.icon-circle {
+    width: 75px;
+    height: 75px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: 0.3s ease;
+}
+
+.bg-info-glass { background: rgba(13, 202, 240, 0.08); color: #0dcaf0; }
+.bg-danger-glass { background: rgba(220, 53, 69, 0.08); color: #dc3545; }
+.bg-gold-glass { background: rgba(184, 134, 11, 0.08); color: var(--gold); }
+
+/* تأثير النبض لصفحة الطوارئ والاستغاثة الدقيقة */
+.pulse-animation {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.4); }
+    70% { box-shadow: 0 0 0 15px rgba(220, 53, 69, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); }
+}
+
+/* ==========================================================================
+   تنسيق الجداول الفاخرة (لوحة التحكم الفاتحة المحدثة)
+   ========================================================================== */
+.table-dark {
+    background: #ffffff !important;
+    color: var(--text-main) !important;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.table-dark thead th {
+    border-bottom: 2px solid var(--gold);
+    color: var(--green-dark) !important;
+    background-color: var(--gold-light) !important;
+    font-weight: 700;
+    padding: 15px;
+}
+
+.table-dark tbody td {
+    border-bottom: 1px solid var(--glass-border);
+    background-color: #ffffff !important;
+    color: var(--text-main) !important;
+    padding: 14px;
+    vertical-align: middle;
+}
+
+/* ==========================================================================
+   منطقة الرفع في StreetWatch المحدثة بالفاتح النقي للـ YOLOv8
+   ========================================================================== */
+.border-dashed {
+    border: 2px dashed #cbd5e1;
+    background: #fafbfc;
+    border-radius: 14px;
+    padding: 40px 20px;
+    text-align: center;
+    transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    cursor: pointer;
+}
+
+.border-dashed:hover {
+    border-color: var(--gold);
+    background: #f1f5f9;
+}

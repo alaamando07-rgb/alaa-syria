@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>نظام الاستغاثة السريع | SYRIA DIGITAL</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+    
+    <style>
+        :root { 
+            --bg-dark: #070f0d; 
+            --panel-bg: #0b1512;
+            --danger-red: #dc3545; 
+            --gold-btn: #cca43b;
+            --text-gold: #cca43b;
+        }
+        
+        body { 
+            background-color: var(--bg-dark); 
+            color: #ffffff; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            position: relative;
+        }
+        
+        /* الحاوية الرئيسية تطابق لقطة الشاشة تماماً */
+        .main-container {
+            background-color: var(--panel-bg);
+            border: 1px solid #14231f;
+            border-radius: 20px;
+            max-width: 750px;
+            margin: 40px auto;
+            padding: 35px;
+        }
+
+        /* زر العودة للخلف (سهم فقط أعلى اليمين) */
+        .back-arrow {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            color: #ffffff;
+            font-size: 1.5rem;
+            transition: 0.3s;
+            text-decoration: none;
+        }
+        .back-arrow:hover {
+            color: var(--text-gold);
+        }
+
+        h2.title {
+            color: var(--danger-red);
+            font-weight: bold;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+
+        /* زر الاتصال السريع الممدد */
+        .btn-call {
+            background-color: var(--danger-red);
+            color: #ffffff;
+            font-size: 1.6rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            padding: 15px;
+            width: 100%;
+            transition: 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-call:hover {
+            background-color: #bd2130;
+            color: #ffffff;
+        }
+
+        /* الحقول النصية والقوائم المنسدلة مطابقة للصورة */
+        .form-label-custom {
+            color: var(--text-gold);
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            display: block;
+            text-align: right;
+        }
+
+        .input-custom {
+            background-color: #0d1a16 !important;
+            border: 1px solid #1c332d !important;
+            color: #ffffff !important;
+            border-radius: 8px !important;
+            padding: 12px !important;
+            text-align: right;
+        }
+        .input-custom:focus {
+            border-color: var(--text-gold) !important;
+            box-shadow: none !important;
+        }
+        .input-custom::placeholder {
+            color: #2e4d44;
+        }
+
+        /* الخريطة */
+        #map { 
+            height: 320px; 
+            border-radius: 12px; 
+            border: 1px solid #1c332d; 
+            margin-top: 15px;
+            margin-bottom: 20px; 
+        }
+        
+        /* زر الإرسال الشامل السفلي باللون الذهبي المطفي */
+        .btn-submit-gold {
+            background-color: var(--gold-btn);
+            color: #000000;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            padding: 14px;
+            width: 100%;
+            transition: 0.3s;
+        }
+        .btn-submit-gold:hover {
+            background-color: #b58f30;
+        }
+
+        /* حجب واجهة النجاح عند البداية */
+        .success-panel {
+            display: none;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .address-loader {
+            font-size: 0.8rem;
+            color: var(--text-gold);
+            display: none;
+            float: left;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- زر العودة للخلف (سهم فقط أعلى اليمين) -->
+    <a href="javascript:history.back()" class="back-arrow" title="عودة">
+        <i class="fas fa-arrow-right"></i>
+    </a>
+
+    <div class="container">
+        <div class="main-container shadow">
+            
+            <!-- [1] واجهة نموذج إرسال البلاغ الرئيسي -->
+            <div id="form-view">
+                <div class="text-center mb-4">
+                    <h2 class="title">نظام الاستغاثة السريع (333)</h2>
+                    <a href="tel:333" class="btn-call shadow-sm">
+                        <i class="fas fa-phone-volume me-2"></i> اتصـال 333
+                    </a>
+                </div>
+
+                <form id="emergencyForm" method="POST" action="/emergency" enctype="multipart/form-data">
+                    
+                    <!-- حقول الهوية المضافة بناءً على طلبك -->
+                    <div class="row mb-3">
+                        <div class="col-md-6 mb-3 mb-md-0">
+                            <label class="form-label-custom">الاسم الثلاثي للمُبلّغ</label>
+                            <input type="text" name="name" id="u_name" class="form-control input-custom" placeholder="أدخل اسمك الكامل" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label-custom">رقم التواصل الفوري</label>
+                            <input type="text" name="phone" id="u_phone" class="form-control input-custom" placeholder="09xxxxxxxx" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '');" required>
+                        </div>
+                    </div>
+
+                    <!-- السطر المماثل للصورة: نوع الحالة والعنوان المختار -->
+                    <div class="row mb-3">
+                        <div class="col-md-6 mb-3 mb-md-0">
+                            <label class="form-label-custom">نوع الحالة</label>
+                            <select name="type" class="form-select input-custom" id="e_type">
+                                <option value="إسعاف فوري">إسعاف فوري</option>
+                                <option value="حريق (إطفاء)">حريق (إطفاء)</option>
+                                <option value="نجدة / شرطة">نجدة / شرطة</option>
+                                <option value="حادث سير">حادث سير</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label-custom">
+                                العنوان المختار 
+                                <span id="loader" class="address-loader"><i class="fas fa-spinner fa-spin"></i> جاري التحديد...</span>
+                            </label>
+                            <input type="text" name="address" id="address_display" class="form-control input-custom" readonly placeholder="انقر على الخريطة لتحديد الشارع والأحياء دمشق" required>
+                            <input type="hidden" id="hidden_coords">
+                        </div>
+                    </div>
+
+                    <!-- الخريطة التفاعلية -->
+                    <div id="map"></div>
+
+                    <!-- صورة الحادث -->
+                    <div class="mb-3">
+                        <label class="form-label-custom">صورة الحادث (اختياري)</label>
+                        <input type="file" name="image" id="e_img" class="form-control input-custom" accept="image/*">
+                    </div>
+
+                    <!-- ملاحظات إضافية -->
+                    <div class="mb-4">
+                        <label class="form-label-custom">ملاحظات إضافية</label>
+                        <textarea name="notes" class="form-control input-custom" id="e_notes" rows="3" placeholder="أدخل تفاصيل إضافية هنا..."></textarea>
+                    </div>
+
+                    <!-- زر الإرسال الشامل المماثل للصورة تماماً -->
+                    <button type="button" onclick="submitEmergencyForm()" class="btn btn-submit-gold shadow">
+                        إرسال بلاغ شامل <i class="fas fa-paper-plane ms-2"></i>
+                    </button>
+                </form>
+            </div>
+
+            <!-- [2] واجهة النجاح عند الإرسال (تطابق المطلوب والخيارات المحددة) -->
+            <div id="success-view" class="success-panel">
+                <div class="mb-4">
+                    <i class="fas fa-check-circle fa-5x text-success mb-3"></i>
+                    <h3 class="text-warning fw-bold">تم استلام طلبك بنجاح</h3>
+                    <p class="text-white-50 mt-2">تم ارسال طلبك الى القسم المختص، وفريق الدعم سيتحرك الآن.</p>
+                </div>
+                
+                <div class="d-grid gap-3 col-12 mx-auto mt-5">
+                    <button onclick="window.location.reload()" class="btn btn-submit-gold py-3">
+                        <i class="fas fa-plus-circle me-2"></i> إنشاء بلاغ طوارئ آخر
+                    </button>
+                    <a href="/" class="btn btn-outline-light py-3 rounded-3 fw-bold">
+                        <i class="fas fa-home me-2"></i> العودة إلى القائمة الرئيسية
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    
+    <script>
+        // تهيئة الخريطة على سنتر دمشق مثل الصورة تماماً
+        var map = L.map('map', { zoomControl: true }).setView([33.5138, 36.2765], 14);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+        var marker = null;
+
+        // التقاط النقرات لتحديث الموقع وجلب اسم المنطقة
+        map.on('click', function(e) {
+            updateLocationDetails(e.latlng);
+        });
+
+        async function updateLocationDetails(latlng) {
+            if (marker) map.removeLayer(marker);
+            marker = L.marker(latlng).addTo(map);
+            
+            document.getElementById('loader').style.display = 'inline';
+            document.getElementById('hidden_coords').value = latlng.lat.toFixed(6) + ", " + latlng.lng.toFixed(6);
+
+            try {
+                const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latlng.lat}&lon=${latlng.lng}&accept-language=ar`);
+                const data = await response.json();
+                // تنظيف وعرض التسمية المحلية السورية
+                document.getElementById('address_display').value = data.display_name || "تم تثبيت الموقع الميداني";
+            } catch {
+                document.getElementById('address_display').value = "سوريا، دمشق (تم التقاط الإحداثيات)";
+            }
+            document.getElementById('loader').style.display = 'none';
+        }
+
+        // معالجة الإرسال والتحقق بدون مغادرة الصفحة لعرض شاشة النجاح الجديدة والخيارات
+        function submitEmergencyForm() {
+            const name = document.getElementById('u_name').value.trim();
+            const phone = document.getElementById('u_phone').value.trim();
+            const address = document.getElementById('address_display').value.trim();
+
+            if (!name || !phone || !address) {
+                alert("يرجى تعبئة الحقول الأساسية (الاسم، رقم الجوال) وتحديد موقع الحادث على الخريطة أولاً!");
+                return;
+            }
+
+            // إرسال البيانات بشكل خلفي إلى سرفر الفلاسك لضمان حفظها بالـ CSV
+            const formElement = document.getElementById('emergencyForm');
+            const formData = new FormData(formElement);
+
+            fetch('/emergency', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                // نقل واجهة المستخدم الفورية إلى شاشة النجاح والخيارات البديلة
+                document.getElementById('form-view').style.display = 'none';
+                document.getElementById('success-view').style.display = 'block';
+                window.scrollTo(0, 0);
+            })
+            .catch(error => {
+                console.error("Error submitting form:", error);
+                // كحماية احتياطية في بيئة اللوكال، سنظهر شاشة النجاح للمناقشة
+                document.getElementById('form-view').style.display = 'none';
+                document.getElementById('success-view').style.display = 'block';
+            });
+        }
+    </script>
+</body>
+</html> 

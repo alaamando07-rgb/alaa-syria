@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة الهوية الرقمية الموحدة | بوابة الدولة السورية</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+    <div class="container py-5 my-5">
+        <div class="row g-4 max-width-900 mx-auto">
+            <div class="col-md-6">
+                <div class="card-gov-luxury p-4 h-100">
+                    <h4 class="fw-bold text-gold mb-4"><i class="fas fa-lock ms-2"></i> تسجيل الدخول الآمن</h4>
+                    <form action="/auth_gateway" method="POST">
+                        <input type="hidden" name="action" value="login">
+                        <div class="mb-3">
+                            <label class="form-label text-white">اسم المستخدم</label>
+                            <input type="text" name="username" class="form-control bg-dark text-white border-secondary" required>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label text-white">كلمة المرور</label>
+                            <input type="password" name="password" class="form-control bg-dark text-white border-secondary" required>
+                        </div>
+                        <button type="submit" class="btn btn-warning w-100 rounded-pill fw-bold">ولوج البوابة الموحدة</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card-gov-luxury p-4 h-100">
+                    <h4 class="fw-bold text-success mb-4"><i class="fas fa-user-plus ms-2"></i> إنشاء هوية رقمية وشحن محفظة</h4>
+                    <form action="/auth_gateway" method="POST" id="regForm">
+                        <input type="hidden" name="action" value="register">
+                        <div class="mb-3">
+                            <label class="form-label text-white">اسم المستخدم الرقمي</label>
+                            <input type="text" name="username" class="form-control bg-dark text-white border-secondary" placeholder="مثال: ali2026" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-white">الاسم الكامل</label>
+                            <input type="text" name="fullname" class="form-control bg-dark text-white border-secondary" placeholder="علي خليل أحمد" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-white">رقم الجوال السوري (حصراً 09 وثمانية خانات)</label>
+                            <input type="text" name="phone" id="regPhone" class="form-control bg-dark text-white border-secondary" placeholder="09xxxxxxxx" required>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label text-white">تعيين كلمة المرور</label>
+                            <input type="password" name="password" class="form-control bg-dark text-white border-secondary" required>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100 rounded-pill fw-bold">إنشاء الهوية وشحن الرصيد</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('regForm').addEventListener('submit', function(e) {
+            var phone = document.getElementById('regPhone').value.trim();
+            var regex = /^09\d{8}$/;
+            if (!regex.test(phone)) {
+                e.preventDefault();
+                alert("⚠️ خطأ في رقم الجوال المرفق للحساب الرقمي والمحفظة الوطنية!");
+            }
+        });
+    </script>
+</body>
+</html>
